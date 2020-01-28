@@ -1,5 +1,7 @@
 import React from 'react';
 import {Link} from 'react-router-dom';
+import moment from 'moment';
+import numeral from 'numeral';
 
 // pair with <ExpenseListItem key={exp.id} expense={exp} /> in ExpenseList
 // const ExpenseListItem = (props) => (
@@ -11,7 +13,11 @@ import {Link} from 'react-router-dom';
 export const ExpenseListItem = ({id, description, amount, createdAt}) => (
   <div>
     <Link to={`/edit/${id}`}><h3>{description}</h3></Link>
-    <p>{amount} - {createdAt}</p>
+    <p>
+      {numeral(amount/100).format('$0,0.00')} 
+      &nbsp;-&nbsp;
+      {moment(createdAt).format('YYYY-MM-DD')}
+    </p>
   </div>
 );
 
