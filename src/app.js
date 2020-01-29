@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import AppRouter from './routers/AppRouter'
 import configureStore from './store/configureStore';
+import './firebase/firebase';
 
 // normalize display across browsers - i.e. CSS reset
 import 'normalize.css/normalize.css';

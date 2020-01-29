@@ -8,7 +8,7 @@ let addExpenseSpy, hist, wrapper;
 beforeEach(() => {
   addExpenseSpy = jest.fn();
   hist = {push: jest.fn()};
-  wrapper = shallow(<AddExpensePage addExpense={addExpenseSpy} history={hist}/>);
+  wrapper = shallow(<AddExpensePage startAddExpense={addExpenseSpy} history={hist}/>);
 });
 
 test('render AddExpense', () => {
