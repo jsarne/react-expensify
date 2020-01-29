@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import filtersReducer from '../../reducers/filters';
 import moment from 'moment';
 

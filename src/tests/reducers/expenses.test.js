@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import expensesReducer from '../../reducers/expenses';
 import expenses from '../fixtures/expenses';
 import moment from 'moment';
