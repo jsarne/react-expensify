@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`message for a single expense 1`] = `
+<div>
+  <p>
+    Viewing 
+    1
+     
+    expense 
+    totalling 
+    $1,095.00
+  </p>
+</div>
+`;
+
+exports[`message for multiple expenses 1`] = `
+<div>
+  <p>
+    Viewing 
+    3
+     
+    expenses 
+    totalling 
+    $1,141.95
+  </p>
+</div>
+`;
+
+exports[`message for no expenses 1`] = `<div />`;
