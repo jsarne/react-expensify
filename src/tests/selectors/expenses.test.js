@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import selectExpenses from '../../selectors/expenses';
 import moment from 'moment';
 import expenses from '../fixtures/expenses';

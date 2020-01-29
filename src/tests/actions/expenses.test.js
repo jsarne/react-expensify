@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import {addExpense, editExpense, removeExpense} from '../../actions/expenses';
 import moment from 'moment';
 

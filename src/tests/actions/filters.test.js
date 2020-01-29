@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 import {setTextFilter, sortByAmount, sortByDate, setStartDate, setEndDate} from '../../actions/filters';
 import moment from 'moment';
 
