@@ -1,6 +1,6 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import {startAddExpense, addExpense, editExpense, removeExpense, setExpenses, startSetExpenses} from '../../actions/expenses';
+import {startAddExpense, addExpense, editExpense, startRemoveExpense, removeExpense, setExpenses, startSetExpenses} from '../../actions/expenses';
 import expenses from '../fixtures/expenses';
 import firedb from '../../firebase/firebase';
 
@@ -41,6 +41,13 @@ test('add redux object', () => {
   });
 });
 
+test('set redux object', () => {
+  expect(setExpenses(expenses)).toEqual({
+    type: 'SET_EXPENSES',
+    expenses
+  })
+});
+
 test('should add exp to db and redux', (done) => {
   const store = createMockStore({});
   // eslint-disable-next-line no-unused-vars
@@ -68,7 +75,7 @@ test('should add exp w/defaults to db and redux', (done) => {
 
   // promise chained from startAddExpense() in actions/expenses.js
   store.dispatch(startAddExpense({})).then(() => {
-    // check mock redux store
+    // check actions sent to mock redux store
     const action = store.getActions()[0];
     expect(action).toEqual({
       type: 'ADD_EXPENSE',
@@ -82,13 +89,6 @@ test('should add exp w/defaults to db and redux', (done) => {
   });
 });
 
-test('set redux object', () => {
-  expect(setExpenses(expenses)).toEqual({
-    type: 'SET_EXPENSES',
-    expenses
-  })
-});
-
 test('should fetch from firebase', (done) => {
   const store = createMockStore();
   store.dispatch(startSetExpenses()).then(() => {
@@ -99,4 +99,25 @@ test('should fetch from firebase', (done) => {
     });
     done();
   }).catch((err) => {console.log(err)});
+});
+
+test('should remove exp from db and redux', (done) => {
+  const store = createMockStore({});
+  const {id} = expenses[1];
+
+  // promise chained from startEditExpense() in actions/expenses.js
+  store.dispatch(startRemoveExpense(id)).then(() => {
+    // check actions sent to mock redux store
+    const action = store.getActions()[0];
+    expect(action).toEqual({
+      type: 'REMOVE_EXPENSE',
+      id
+    });
+    // check firebase db
+    return firedb.ref(`expenses/${id}`).once('value');
+  }).then((snapshot) => {
+    expect(snapshot.val()).toEqual(null);
+    done();
+  });
+
 });
