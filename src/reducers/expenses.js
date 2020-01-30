@@ -7,7 +7,9 @@ export default (state = expensesReducerDefaultState, action) => {
       return state.filter(exp => exp.id !== action.id);
     case 'EDIT_EXPENSE':
       return state.map(exp => exp.id === action.id ? {...exp, ...action.edits} : exp);
+    case 'SET_EXPENSES':
+      return action.expenses;
     default: 
       return state;
   }
-};
+}; 

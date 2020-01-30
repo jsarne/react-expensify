@@ -56,3 +56,12 @@ test('edit invalid id', () => {
   const newExpenses = expensesReducer(expenses, action);
   expect(newExpenses).toEqual(expenses);
 });
+
+test('set completely replaces contents of store', () => {
+  const action = {
+    type: 'SET_EXPENSES',
+    expenses: [expenses[2]]
+  };
+  const state = expensesReducer(expenses, action);
+  expect(state).toEqual([expenses[2]]);
+});
