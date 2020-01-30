@@ -3,9 +3,10 @@ import thunk from 'redux-thunk';
 import {startAddExpense, startEditExpense, startRemoveExpense, startSetExpenses,
         addExpense, editExpense, removeExpense, setExpenses} from '../../actions/expenses';
 import expenses from '../fixtures/expenses';
-import firedb from '../../firebase/firebase';
+import {firedb} from '../../firebase/firebase';
 
 const createMockStore = configureMockStore([thunk]);
+const uid = "xyz789";
 
 beforeEach((done) => {
   const expData = {};
@@ -13,7 +14,7 @@ beforeEach((done) => {
     expData[id] = {description, note, amount, createdAt};
   });
   // use set to replace existing expenses for each test case
-  firedb.ref('expenses').set(expData).then(() => done());
+  firedb.ref(`users/${uid}/expenses`).set(expData).then(() => done());
 });
 
 test('remove redux object', () => {
@@ -50,7 +51,7 @@ test('set redux object', () => {
 });
 
 test('should add exp to db and redux', (done) => {
-  const store = createMockStore({});
+  const store = createMockStore({auth: {uid}});
   // eslint-disable-next-line no-unused-vars
   const {id, ...expData} = expenses[1];  // discard ID - action doesn't expect it, firedb/mock redux don't return fixture value
 
@@ -63,7 +64,7 @@ test('should add exp to db and redux', (done) => {
       expense: {id: expect.any(String), ...expData}
     });
     // check firebase db
-    return firedb.ref(`expenses/${action.expense.id}`).once('value');
+    return firedb.ref(`users/${uid}/expenses/${action.expense.id}`).once('value');
   }).then((snapshot) => {
     expect(snapshot.val()).toEqual(expData);
     done();
@@ -71,7 +72,7 @@ test('should add exp to db and redux', (done) => {
 });
 
 test('should add exp w/defaults to db and redux', (done) => {
-  const store = createMockStore({});
+  const store = createMockStore({auth: {uid}});
   const defaultExpData = {description: '', note: '', createdAt: 0, amount: 0};
 
   // promise chained from startAddExpense() in actions/expenses.js
@@ -83,7 +84,7 @@ test('should add exp w/defaults to db and redux', (done) => {
       expense: {id: expect.any(String), ...defaultExpData}
     });
     // check firebase db
-    return firedb.ref(`expenses/${action.expense.id}`).once('value');
+    return firedb.ref(`users/${uid}/expenses/${action.expense.id}`).once('value');
   }).then((snapshot) => {
     expect(snapshot.val()).toEqual(defaultExpData);
     done();
@@ -91,7 +92,7 @@ test('should add exp w/defaults to db and redux', (done) => {
 });
 
 test('should fetch from firebase', (done) => {
-  const store = createMockStore();
+  const store = createMockStore({auth: {uid}});
   store.dispatch(startSetExpenses()).then(() => {
     const action = store.getActions()[0];
     expect(action).toEqual({
@@ -103,7 +104,7 @@ test('should fetch from firebase', (done) => {
 });
 
 test('should remove exp from db and redux', (done) => {
-  const store = createMockStore({});
+  const store = createMockStore({auth: {uid}});
   const {id} = expenses[1];
 
   store.dispatch(startRemoveExpense(id)).then(() => {
@@ -112,7 +113,7 @@ test('should remove exp from db and redux', (done) => {
       type: 'REMOVE_EXPENSE',
       id
     });
-    return firedb.ref(`expenses/${id}`).once('value');
+    return firedb.ref(`users/${uid}/expenses/${id}`).once('value');
   }).then((snapshot) => {
     expect(snapshot.val()).toEqual(null);
     done();
@@ -120,7 +121,7 @@ test('should remove exp from db and redux', (done) => {
 });
 
 test('should edit exp in db and redux', (done) => {
-  const store = createMockStore({});
+  const store = createMockStore({auth: {uid}});
   const {id} = expenses[1];
   const edits = {description: 'my new desc', amount: '99999'};
 
@@ -131,7 +132,7 @@ test('should edit exp in db and redux', (done) => {
       id,
       edits
     });
-    return firedb.ref(`expenses/${id}`).once('value');
+    return firedb.ref(`users/${uid}/expenses/${id}`).once('value');
   }).then((snapshot) => {
     const newExp = snapshot.val();
     expect(newExp.description).toEqual(edits.description);
