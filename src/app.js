@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
 import AppRouter from './routers/AppRouter'
 import configureStore from './store/configureStore';
+import {startSetExpenses} from './actions/expenses';
 import './firebase/firebase';
 
 // normalize display across browsers - i.e. CSS reset
@@ -17,4 +18,9 @@ const jsx = (
     <AppRouter />
   </Provider>
 );
-ReactDOM.render(jsx, document.getElementById('app'));
+
+ReactDOM.render(<p>Loading...</p>, document.getElementById('app'));
+
+myStore.dispatch(startSetExpenses()).then(() => {
+  ReactDOM.render(jsx, document.getElementById('app'));
+});

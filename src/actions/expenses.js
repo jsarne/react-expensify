@@ -31,3 +31,22 @@ export const startAddExpense = (expenseData = {}) => {
       });
   };
 };
+
+export const setExpenses = (expenses) => ({
+  type: 'SET_EXPENSES',
+  expenses
+});
+
+export const startSetExpenses = () => {
+  return (dispatch) => {
+    return firedb.ref('expenses')
+      .once('value')
+      .then((fireExp) => {
+        const storeExp = [];
+        fireExp.forEach((fe) => {
+          storeExp.push({id: fe.key, ...fe.val()});
+        });
+        dispatch(setExpenses(storeExp));
+      });
+  }
+};
