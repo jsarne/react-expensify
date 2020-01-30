@@ -39,6 +39,13 @@ export const editExpense = (id, edits) => ({
     id,
     edits
 });
+export const startEditExpense = (id, edits) => {
+  return (dispatch) => {
+    return firedb.ref(`expenses/${id}`).update(edits).then(() => {
+      dispatch(editExpense(id, edits));
+    });
+  }
+};
 
 export const setExpenses = (expenses) => ({
   type: 'SET_EXPENSES',

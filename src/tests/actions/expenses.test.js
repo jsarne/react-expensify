@@ -1,6 +1,7 @@
 import configureMockStore from 'redux-mock-store';
 import thunk from 'redux-thunk';
-import {startAddExpense, addExpense, editExpense, startRemoveExpense, removeExpense, setExpenses, startSetExpenses} from '../../actions/expenses';
+import {startAddExpense, startEditExpense, startRemoveExpense, startSetExpenses,
+        addExpense, editExpense, removeExpense, setExpenses} from '../../actions/expenses';
 import expenses from '../fixtures/expenses';
 import firedb from '../../firebase/firebase';
 
@@ -105,19 +106,36 @@ test('should remove exp from db and redux', (done) => {
   const store = createMockStore({});
   const {id} = expenses[1];
 
-  // promise chained from startEditExpense() in actions/expenses.js
   store.dispatch(startRemoveExpense(id)).then(() => {
-    // check actions sent to mock redux store
     const action = store.getActions()[0];
     expect(action).toEqual({
       type: 'REMOVE_EXPENSE',
       id
     });
-    // check firebase db
     return firedb.ref(`expenses/${id}`).once('value');
   }).then((snapshot) => {
     expect(snapshot.val()).toEqual(null);
     done();
   });
+});
 
+test('should edit exp in db and redux', (done) => {
+  const store = createMockStore({});
+  const {id} = expenses[1];
+  const edits = {description: 'my new desc', amount: '99999'};
+
+  store.dispatch(startEditExpense(id, edits)).then(() => {
+    const action = store.getActions()[0];
+    expect(action).toEqual({
+      type: 'EDIT_EXPENSE',
+      id,
+      edits
+    });
+    return firedb.ref(`expenses/${id}`).once('value');
+  }).then((snapshot) => {
+    const newExp = snapshot.val();
+    expect(newExp.description).toEqual(edits.description);
+    expect(newExp.amount).toEqual(edits.amount);
+    done();
+  });
 });
