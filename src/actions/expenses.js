@@ -1,4 +1,4 @@
-import firedb from '../firebase/firebase';
+import {firedb} from '../firebase/firebase';
 
 export const addExpense = (expense) => ({
   type: 'ADD_EXPENSE',

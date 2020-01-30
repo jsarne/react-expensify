@@ -18,11 +18,10 @@ exports[`header render 1`] = `
   >
     Add Expense
   </NavLink>
-  <NavLink
-    activeClassName="is-active"
-    to="/help"
+  <button
+    onClick={[Function]}
   >
-    Help
-  </NavLink>
+    Logout
+  </button>
 </header>
 `;
