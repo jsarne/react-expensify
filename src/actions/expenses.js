@@ -5,7 +5,8 @@ export const addExpense = (expense) => ({
   expense: expense
 });
 export const startAddExpense = (expenseData = {}) => {
-  return (dispatch) => {
+  return (dispatch, getState) => {
+    const uid = getState().auth.uid;
     const {
       description='', 
       note='', 
@@ -14,7 +15,7 @@ export const startAddExpense = (expenseData = {}) => {
     } = expenseData;
     const exp = {description, note, amount, createdAt};
 
-    return firedb.ref('expenses')
+    return firedb.ref(`users/${uid}/expenses`)
       .push(exp)
       .then((fireExp) => {
         dispatch(addExpense({id: fireExp.key, ...exp}));
@@ -27,8 +28,9 @@ export const removeExpense = (id) => ({
   id
 });
 export const startRemoveExpense = (id) => {
-  return (dispatch) => {
-    return firedb.ref(`expenses/${id}`).remove().then(() => {
+  return (dispatch, getState) => {
+    const uid = getState().auth.uid;
+    return firedb.ref(`users/${uid}/expenses/${id}`).remove().then(() => {
       dispatch(removeExpense(id));
     });
   }
@@ -40,8 +42,9 @@ export const editExpense = (id, edits) => ({
     edits
 });
 export const startEditExpense = (id, edits) => {
-  return (dispatch) => {
-    return firedb.ref(`expenses/${id}`).update(edits).then(() => {
+  return (dispatch, getState) => {
+    const uid = getState().auth.uid;
+    return firedb.ref(`users/${uid}/expenses/${id}`).update(edits).then(() => {
       dispatch(editExpense(id, edits));
     });
   }
@@ -52,8 +55,9 @@ export const setExpenses = (expenses) => ({
   expenses
 });
 export const startSetExpenses = () => {
-  return (dispatch) => {
-    return firedb.ref('expenses')
+  return (dispatch, getState) => {
+    const uid = getState().auth.uid;
+    return firedb.ref(`users/${uid}/expenses`)
       .once('value')
       .then((fireExp) => {
         const storeExp = [];
