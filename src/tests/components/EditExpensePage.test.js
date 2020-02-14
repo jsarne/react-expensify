@@ -24,8 +24,21 @@ test('handle onSubmit', () => {
   expect(removeSpy).toHaveBeenCalledTimes(0);
 });
 
-test('handle remove button', () => {
-  wrapper.find('button').simulate('click');
+test('handle remove button, show modal', () => {
+  wrapper.find('button[name="removeButton"]').simulate('click');
+  expect(removeSpy).toHaveBeenCalledTimes(0);
+  expect(editSpy).toHaveBeenCalledTimes(0);
+});
+
+test('handle remove button, accepted', () => {
+  wrapper.find('button[name="removeYes"]').simulate('click');
+  expect(hist.push).toHaveBeenLastCalledWith('/');
   expect(removeSpy).toHaveBeenLastCalledWith(match.params.id);
+  expect(editSpy).toHaveBeenCalledTimes(0);
+});
+
+test('handle remove button, rejected', () => {
+  wrapper.find('button[name="removeNo"]').simulate('click');
+  expect(removeSpy).toHaveBeenCalledTimes(0);
   expect(editSpy).toHaveBeenCalledTimes(0);
 });
