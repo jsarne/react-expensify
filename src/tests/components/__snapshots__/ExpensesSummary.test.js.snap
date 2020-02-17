@@ -21,6 +21,18 @@ exports[`message for a single expense 1`] = `
         $1,095.00
       </span>
     </h1>
+    <div>
+      <span>
+        Hidden by filters: 
+        2
+      </span>
+       
+      expenses
+       totalling 
+      <span>
+        $46.95
+      </span>
+    </div>
     <div
       className="page-header__actions"
     >
@@ -91,6 +103,18 @@ exports[`message for no expenses 1`] = `
         $0.00
       </span>
     </h1>
+    <div>
+      <span>
+        Hidden by filters: 
+        3
+      </span>
+       
+      expenses
+       totalling 
+      <span>
+        $1,141.95
+      </span>
+    </div>
     <div
       className="page-header__actions"
     >
